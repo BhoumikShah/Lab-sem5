@@ -1,0 +1,48 @@
+========================================================================
+                      ARTIFICIAL INTELLIGENCE (AI) CHEATSHEET
+========================================================================
+
+1. Rule-Based AI Systems
+   - The foundation of early AI (Expert Systems).
+   - Relies on hardcoded IF-THEN-ELSE logic (e.g., if "weather" in input -> return weather response).
+   - Pros: 100% predictable, no training required.
+   - Cons: Cannot learn, scale, or handle unexpected inputs.
+
+2. Data Collection & Preprocessing
+   - Collection: APIs (JSON via urllib/requests), Web Scraping (BeautifulSoup), CSVs (pandas).
+   - Preprocessing:
+     - Imputation: Filling missing data (e.g., SimpleImputer(strategy='mean')).
+     - Encoding: Converting text to numbers (e.g., OneHotEncoder for non-ordinal categories).
+     - Scaling: Normalizing data so algorithms (like Neural Nets/SVMs) train efficiently.
+
+3. Spam Filter (Text Classification)
+   - Text cannot be fed directly to ML. It must be vectorized.
+   - TF-IDF (Term Frequency-Inverse Document Frequency): Downweights common words ("the", "is") and upweights rare, indicative words.
+   - Multinomial Naive Bayes is the standard baseline algorithm for document/text classification.
+
+4. Face Recognition System
+   - Detection vs Recognition: 
+     - Detection: "Is there a face?" (OpenCV Haar Cascades).
+     - Recognition: "Whose face is this?" (FaceNet, dlib).
+   - OpenCV Cascade Classifier uses pre-trained XML files to identify facial features based on contrast boundaries.
+
+5. Sentiment Analysis
+   - Analyzing text to determine emotional tone (Polarity: -1.0 to 1.0).
+   - Can be done via lexicons/rules (TextBlob out-of-the-box) or trained ML models (Logistic Regression, RNNs).
+
+6. Agricultural AI
+   - Uses environmental data (Soil NPK, Temp, Humidity, pH) to predict outcomes.
+   - Random Forest is often used here because it handles non-linear agricultural variables very well and prevents overfitting.
+
+7. Medical Diagnosis AI
+   - Extremely sensitive domain. Models must output probabilities, not just binary classifications (hence Logistic Regression is preferred for baselines).
+   - Scaling is mandatory for medical data to ensure vital signs/measurements on different scales don't skew the model.
+   - Recall (minimizing false negatives) is usually prioritized over raw accuracy.
+
+========================================================================
+KEY LIBRARIES:
+- pandas: Data manipulation.
+- scikit-learn (sklearn): Machine Learning models and preprocessing.
+- cv2 (OpenCV): Computer Vision and image processing.
+- textblob: Ready-to-use Natural Language Processing (NLP).
+========================================================================

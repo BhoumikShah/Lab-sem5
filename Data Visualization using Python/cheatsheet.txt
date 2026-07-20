@@ -1,0 +1,83 @@
+========================================================================
+                      PYTHON ASSIGNMENTS CHEATSHEET
+========================================================================
+
+1. Lists & Dictionaries
+   - Lists: Ordered collection (e.g., `students = []`). Use `.append()` to add.
+   - Dictionaries: Key-value pairs (e.g., `student = {'name': 'Alice', 'marks': 90}`).
+
+2. Sum of Two Integers
+   - Add numbers using the `+` operator: `a + b`
+   - Cast input to integer: `int(input("Enter number: "))`
+
+3. Celsius to Fahrenheit
+   - Formula: `(C * 9/5) + 32`
+   - Use `float()` for decimals.
+
+4. Triangle Area (Heron's Formula)
+   - Requires `import math`
+   - Semi-perimeter: `s = (a + b + c) / 2`
+   - Area: `math.sqrt(s * (s - a) * (s - b) * (s - c))`
+
+5. Swap Two Variables
+   - Python shorthand swap: `a, b = b, a`
+
+6. Print Initials
+   - Split string by spaces: `name.split()`
+   - Get first character: `word[0].upper()`
+   - Join characters: `''.join(list)`
+
+7. Student Grade Calculator
+   - Use `if-elif-else` ladder to evaluate conditions sequentially.
+   - E.g., `if marks >= 90: return 'A'`
+
+8. Day Number to Day Name
+   - Dictionary mapping: `{1: 'Monday', 2: 'Tuesday'}`
+   - `dict.get(key, default)` fetches value safely without KeyError.
+
+9. Income Tax Calculator
+   - Nested conditional logic to handle progressive tax brackets.
+   - Multiply by percentage: `(income - limit) * 0.05`
+
+10. ALERT for Negative Numbers
+    - Iterate list: `for n in numbers:`
+    - Check condition: `if n < 0:`
+
+11. Password Strength Checker
+    - Check length: `len(password) >= 8`
+    - Check digits: `any(char.isdigit() for char in password)`
+    - Check uppercase: `any(char.isupper() for char in password)`
+
+12. AGE Function
+    - Use `import datetime`
+    - Get current year: `datetime.datetime.now().year`
+    - Age: `current_year - birth_year`
+
+13. SORT Function (Bubble Sort)
+    - Nested loops: `for i in range(n): for j in range(0, n-i-1):`
+    - Compare adjacent elements and swap if out of order.
+
+14. File Read
+    - Open in read mode: `with open('file.txt', 'r') as f:`
+    - Read all content: `f.read()`
+    - Handle missing files with `try...except FileNotFoundError`
+
+15. File Write
+    - Open in write mode: `with open('file.txt', 'w') as f:`
+    - Replaces entire file content.
+    - Write text: `f.write(text)`
+
+16. File Append
+    - Open in append mode: `with open('file.txt', 'a') as f:`
+    - Adds text to the end without deleting existing content.
+
+17. File Operations Combined
+    - You can perform multiple operations by opening the file repeatedly in different modes, or opening in 'r+' (read/write) mode.
+    - The `with` statement ensures the file is safely closed after the block ends.
+
+------------------------------------------------------------------------
+GENERAL TIPS:
+- Always use `input()` to get user data.
+- Wrap inputs in `int()` or `float()` to perform math.
+- Wrap operations in `try...except ValueError:` to handle bad inputs.
+========================================================================

@@ -1,0 +1,56 @@
+========================================================================
+                      OPERATING SYSTEMS (OS) LAB CHEATSHEET
+========================================================================
+
+1. Shell Programming (Bash)
+   - Basics: `#!/bin/bash` at the top of the file.
+   - Variables: `name="John"`, access with `$name`.
+   - Conditionals: 
+     `if [ $a -gt $b ]; then ... elif [ ... ]; then ... else ... fi`
+   - Loops: `for i in {1..5}; do ... done` or `while [ condition ]; do ... done`
+   - Input: `read var_name`
+
+2. Process Control (C Programming in Linux/POSIX)
+   - `<sys/wait.h>`, `<unistd.h>` required.
+   - `fork()`: Creates a child process. Returns 0 to child, >0 (child PID) to parent, <0 on failure.
+   - `wait(NULL)`: Parent waits for child to finish to prevent zombie processes.
+   - `exec()` family (execl, execvp, etc.): Replaces the current process image with a new one.
+   - `exit(0)`: Terminates a process.
+   - Orphan Process: Parent dies before child. Child is adopted by `init` (PID 1).
+   - Zombie Process: Child dies, but parent hasn't called `wait()`.
+
+3. CPU Scheduling Algorithms
+   - FCFS (First Come First Serve): Non-preemptive. Simple FIFO queue.
+   - SJF (Shortest Job First): Non-preemptive. Picks shortest burst time. Lowest average waiting time.
+   - SRTF (Shortest Remaining Time First): Preemptive SJF.
+   - Round Robin (RR): Preemptive. Time quantum/slice is given to each process in a circular queue.
+   - Priority Scheduling: CPU given to process with highest priority. Can suffer from starvation (solved via Aging).
+
+4. Inter-Process Communication (IPC)
+   - Pipes: Unidirectional data channel (`pipe(fd)`). `fd[0]` is read, `fd[1]` is write.
+   - Shared Memory: Fastest IPC. Multiple processes map the same physical memory (`shmget`, `shmat`).
+   - Message Queues: Linked list of messages stored within the kernel.
+
+5. Synchronization & Semaphores
+   - Critical Section Problem: Ensuring only one process manipulates shared data at a time.
+   - Mutex (Mutual Exclusion): Binary lock (0 or 1).
+   - Semaphore: Integer variable for signaling (`wait()`/`P` decrements, `signal()`/`V` increments).
+   - Classic Problems: Producer-Consumer, Readers-Writers, Dining Philosophers.
+
+6. Deadlocks
+   - 4 Necessary Conditions: Mutual Exclusion, Hold & Wait, No Preemption, Circular Wait.
+   - Prevention: Break one of the 4 conditions.
+   - Avoidance: Banker's Algorithm (checks if granting resources leaves system in a "Safe State").
+
+7. Memory Management & Paging
+   - Logical vs Physical Address: CPU generates Logical, MMU maps it to Physical (Frames).
+   - Paging: Divides logical memory into Pages and physical memory into Frames. Avoids external fragmentation.
+   - Page Replacement Algorithms: FIFO (First-In, First-Out), LRU (Least Recently Used), Optimal (Replace page not used for longest time in future).
+
+========================================================================
+COMPILATION COMMANDS (Linux/WSL)
+- Compile C code: `gcc filename.c -o output_name`
+- Run C program: `./output_name`
+- Make bash script executable: `chmod +x script.sh`
+- Run bash script: `./script.sh`
+========================================================================

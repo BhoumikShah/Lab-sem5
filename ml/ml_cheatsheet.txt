@@ -1,0 +1,51 @@
+========================================================================
+                      MACHINE LEARNING (ML) CHEATSHEET
+========================================================================
+
+1. Exploratory Data Analysis (EDA) & Preprocessing
+   - Visualization: 
+     - sns.countplot(x='target', data=df) -> Class distribution
+     - sns.heatmap(df.corr(), annot=True) -> Feature correlation
+   - Scaling:
+     - StandardScaler: Z-score scaling (mean=0, variance=1)
+     - MinMaxScaler: Scales features to [0, 1] range.
+   - Encoding: LabelEncoder() converts strings to integers.
+
+2. KNN & Naïve Bayes Classifiers
+   - KNN (K-Nearest Neighbors): Sensitive to feature scaling.
+     - knn = KNeighborsClassifier(n_neighbors=5)
+   - Naïve Bayes: Assumes features are independent.
+     - nb = GaussianNB()
+   - Metrics: accuracy_score, precision_score, recall_score, f1_score.
+
+3. Tree-Based Classifiers & K-Fold CV
+   - Decision Tree: Highly interpretable, prone to overfitting.
+     - dt = DecisionTreeClassifier(max_depth=4)
+   - K-Fold Cross Validation: Splits data into 'k' folds to validate model robustness.
+     - cross_val_score(model, X, y, cv=KFold(n_splits=5))
+
+4. Support Vector Machines (SVM)
+   - Great for high-dimensional spaces. Requires feature scaling.
+   - svm = SVC(kernel='rbf')
+
+5. Ensemble Methods (Random Forest)
+   - Builds multiple decision trees and merges them (bagging).
+   - rf = RandomForestClassifier(n_estimators=100)
+   - Feature Importance: rf.feature_importances_ shows which features matter most.
+
+6. Clustering Techniques (Unsupervised)
+   - Spectral Clustering: Groups nodes using eigenvalues of similarity matrix. Good for non-convex clusters.
+   - DBSCAN: Density-based clustering. Finds core samples and expands clusters. Marks outliers as -1. No need to predefine K.
+
+7. Regression Techniques
+   - Linear Regression: Fits a line to minimize MSE.
+   - Ridge (L2): Adds penalty proportional to square of coefficients to prevent overfitting.
+   - Lasso (L1): Adds penalty proportional to absolute value, can force some coefficients to zero (feature selection).
+   - Metrics: Mean Squared Error (MSE), R-squared (R2).
+
+========================================================================
+GENERAL WORKFLOW:
+1. Load Data (pd.read_csv) -> 2. Clean/Impute/Encode -> 3. Scale -> 
+4. Train-Test Split -> 5. Train Model (.fit) -> 6. Predict (.predict) -> 
+7. Evaluate (accuracy_score, MSE)
+========================================================================
