@@ -1,6 +1,4 @@
-/* -----------------------------------------------------
- * Program: Fork - Parent sorts ascending, Child sorts descending
- * ----------------------------------------------------- */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>

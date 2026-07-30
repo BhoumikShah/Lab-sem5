@@ -10,7 +10,6 @@ def read_file(filename):
 
 if __name__ == '__main__':
     filename = input("Enter filename to read (e.g. sample.txt): ")
-    # Create a dummy file if user types sample.txt and it doesn't exist just for demo
     try:
         with open(filename, 'x') as f: f.write("Dummy content for " + filename)
     except FileExistsError:

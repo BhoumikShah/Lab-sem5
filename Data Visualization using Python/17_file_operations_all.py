@@ -16,3 +16,4 @@ if __name__ == '__main__':
     initial = input("Enter initial text to write: ")
     append = input("Enter text to append: ")
     all_operations(filename, initial, append)
+    
