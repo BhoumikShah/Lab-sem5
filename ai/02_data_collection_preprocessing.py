@@ -2,8 +2,6 @@ import pandas as pd
 import numpy as np
 from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import StandardScaler, OneHotEncoder
-import urllib.request
-import json
 
 print(" Data Collection ")
 data_dict = {
@@ -14,15 +12,7 @@ data_dict = {
 df = pd.DataFrame(data_dict)
 print("Initial Dataset:\n", df)
 
-print("\nFetching data from dummy API (JSON)...")
-try:
-    with urllib.request.urlopen("https://jsonplaceholder.typicode.com/users/1") as url:
-        api_data = json.loads(url.read().decode())
-        print(f"API Fetched User: {api_data['name']} from {api_data['address']['city']}")
-except Exception as e:
-    print("API fetch failed (possibly offline).")
-
-print("\n--- Data Preprocessing ---")
+print("\n Data Preprocessing")
 print("1. Imputing Missing Values (Mean strategy):")
 imputer = SimpleImputer(strategy='mean')
 df[['Age', 'Salary']] = imputer.fit_transform(df[['Age', 'Salary']])

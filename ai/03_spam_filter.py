@@ -1,10 +1,14 @@
+import os
+import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-import pandas as pd
 
-df = pd.read_csv('sms.tsv', sep='\t', names=['label', 'message'])
+script_dir = os.path.dirname(os.path.abspath(__file__))
+file_path = os.path.join(script_dir, 'sms.tsv')
+
+df = pd.read_csv(file_path, sep='\t', names=['label', 'message'])
 
 vectorizer = TfidfVectorizer(stop_words='english')
 X = vectorizer.fit_transform(df['message'])
