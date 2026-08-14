@@ -1,7 +1,4 @@
-/* -----------------------------------------------------
- * Program: FCFS (First Come First Serve) - Non-Preemptive
- * CPU Scheduling Algorithm
- * ----------------------------------------------------- */
+
 #include <stdio.h>
 
 struct Process {
@@ -26,7 +23,6 @@ int main() {
         scanf("%d %d", &p[i].arrival_time, &p[i].burst_time);
     }
 
-    /* Sort processes by arrival time (FCFS order) */
     for (int i = 0; i < n - 1; i++)
         for (int j = 0; j < n - i - 1; j++)
             if (p[j].arrival_time > p[j + 1].arrival_time) {

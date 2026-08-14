@@ -1,7 +1,4 @@
-/* -----------------------------------------------------
- * Program: SRTF (Shortest Remaining Time First) - Preemptive
- * CPU Scheduling Algorithm
- * ----------------------------------------------------- */
+
 #include <stdio.h>
 #include <limits.h>
 
@@ -40,7 +37,6 @@ int main() {
         int shortest = -1;
         int min_remaining = INT_MAX;
 
-        /* Find the process with the shortest remaining time among arrived processes */
         for (int i = 0; i < n; i++) {
             if (p[i].arrival_time <= current_time && !p[i].is_completed &&
                 p[i].remaining_time < min_remaining) {
@@ -50,7 +46,6 @@ int main() {
         }
 
         if (shortest == -1) {
-            /* No process has arrived yet, CPU is idle */
             printf("Time %d: [IDLE]\n", current_time);
             current_time++;
             continue;
