@@ -35,3 +35,4 @@ for col in categorical_cols:
     encoder = LabelEncoder()
     df[f'encoded_{col}'] = encoder.fit_transform(df[col])
     print(df[[col, f'encoded_{col}']].drop_duplicates().head())
+
