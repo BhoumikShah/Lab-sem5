@@ -1,35 +1,43 @@
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
+import requests
 import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.preprocessing import LabelEncoder
 
-df = pd.read_csv('crop_recommendation.csv')
+API_KEY = "579b464db66ec23bdd000001746b938745aa48755cc791137850987f"
+RESOURCE_ID = "9ef84268-d588-465a-a308-a864a43d0070" 
 
-X = df.drop('label', axis=1)
-y = df['label']
+url = f"https://api.data.gov.in/resource/{RESOURCE_ID}?api-key={API_KEY}&format=json&limit=2000"
 
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+try:
+    response = requests.get(url)
+    response.raise_for_status()
+    json_data = response.json()
+    
+    df = pd.DataFrame(json_data['records'])
+    df = df.dropna()
+    
+    le_state = LabelEncoder()
+    le_season = LabelEncoder()
+    
+    df['state_encoded'] = le_state.fit_transform(df['state_name'])
+    df['season_encoded'] = le_season.fit_transform(df['season'])
+    
+    df['area'] = pd.to_numeric(df['area'], errors='coerce')
+    df['production'] = pd.to_numeric(df['production'], errors='coerce')
+    df = df.dropna()
+    
+    X = df[['state_encoded', 'season_encoded', 'area', 'production']]
+    y = df['crop']
+    
+    model = RandomForestClassifier(random_state=42)
+    model.fit(X, y)
+    
+    sample_state = df['state_encoded'].iloc[0]
+    sample_season = df['season_encoded'].iloc[0]
+    sample_data = pd.DataFrame([[sample_state, sample_season, 5000, 10000]], columns=X.columns)
+    
+    print("Data loaded directly from data.gov.in!")
+    print("Predicted/Expected Crop:", model.predict(sample_data)[0])
 
-model = RandomForestClassifier(n_estimators=50, random_state=42)
-model.fit(X_train, y_train)
-
-preds = model.predict(X_test)
-print(f"Model Accuracy on Test Data: {accuracy_score(y_test, preds):.4f}\n")
-
-if __name__ == '__main__':
-    print("Enter soil/weather parameters to predict the best crop:")
-    try:
-        n = float(input("Nitrogen (N) content: "))
-        p = float(input("Phosphorus (P) content: "))
-        k = float(input("Potassium (K) content: "))
-        temp = float(input("Temperature (C): "))
-        hum = float(input("Humidity (%): "))
-        ph = float(input("Soil pH: "))
-        rain = float(input("Rainfall (mm): "))
-        
-        new_data = pd.DataFrame([[n, p, k, temp, hum, ph, rain]], columns=X.columns)
-        prediction = model.predict(new_data)
-        
-        print(f"\n--> Recommended Crop to Plant: {prediction[0].upper()}")
-    except ValueError:
-        print("Invalid input. Please enter numerical values.")
+except Exception as e:
+    print("Error fetching or processing data:", e)
