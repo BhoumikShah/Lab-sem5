@@ -1,5 +1,5 @@
 ========================================================================
-                      ARTIFICIAL INTELLIGENCE (AI) CHEATSHEET
+                      ARTIFICIAL INTELLIGENCE (AI) CHEATSHEET & VIVA GUIDE
 ========================================================================
 
 1. Rule-Based AI Systems
@@ -20,29 +20,54 @@
    - TF-IDF (Term Frequency-Inverse Document Frequency): Downweights common words ("the", "is") and upweights rare, indicative words.
    - Multinomial Naive Bayes is the standard baseline algorithm for document/text classification.
 
-4. Face Recognition System
+4. Face & Eye Feature Detection (Computer Vision)
    - Detection vs Recognition: 
-     - Detection: "Is there a face?" (OpenCV Haar Cascades).
-     - Recognition: "Whose face is this?" (FaceNet, dlib).
-   - OpenCV Cascade Classifier uses pre-trained XML files to identify facial features based on contrast boundaries.
+     - Detection: "Is there a face/eye?" (OpenCV Haar Cascades).
+     - Recognition: "Whose identity is this?" (FaceNet, dlib embeddings).
+   - Integral Images: Computes rectangular pixel sums in O(1) constant time regardless of window size.
+   - AdaBoost Cascading: Chains hundreds of weak classifiers into stages. Non-face background windows are discarded in early stages to ensure real-time video performance.
+   - Hyperparameters:
+     * scaleFactor (e.g., 1.1): Multi-scale pyramid reduction step (downscales image by 10% each level).
+     * minNeighbors (e.g., 5 for face, 6 for eyes): Number of overlapping candidate boxes required to accept a detection.
+   - ROI (Region of Interest): Slicing face coordinates before detecting eyes (restricted to upper 60%) reduces search space from O(W*H) to O(w*h) and avoids false positives.
+   - Histogram Equalization (cv2.equalizeHist): Flattens pixel intensity distribution to handle shadow/lighting variations.
 
-5. Sentiment Analysis
-   - Analyzing text to determine emotional tone (Polarity: -1.0 to 1.0).
-   - Can be done via lexicons/rules (TextBlob out-of-the-box) or trained ML models (Logistic Regression, RNNs).
+5. Sentiment Analysis & NLP Opinion Mining
+   - Text Vectorization & N-Grams:
+     * TF-IDF = TF(t, d) * log((1 + N) / (1 + DF(t))) + 1
+     * Uni-grams + Bi-grams: Captures negation (e.g., "not good" vs "good") which solves sentiment polarity inversion.
+   - Multi-Model Comparison:
+     * Logistic Regression: Maps linear weights to probabilities via Sigmoid function sigma(z) = 1 / (1 + e^-z). Regularization (C parameter) controls overfitting.
+     * Multinomial Naive Bayes: Probabilistic text classification assuming conditional word independence. Uses Laplace smoothing (alpha=1.0) to prevent zero probabilities.
+     * Linear SVM (SGD): Finds the maximum-margin hyperplane separating classes.
+   - Explainable AI (XAI): Model weights/coefficients indicate which specific words pushed a prediction towards positive or negative.
+   - Metrics:
+     * Precision = TP / (TP + FP) (How many predicted positives were actually positive?)
+     * Recall = TP / (TP + FN) (How many actual positives were caught?)
+     * F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
 
-6. Agricultural AI
-   - Uses environmental data (Soil NPK, Temp, Humidity, pH) to predict outcomes.
-   - Random Forest is often used here because it handles non-linear agricultural variables very well and prevents overfitting.
+6. Agricultural AI: Plant Leaf Disease Detection & Classification (Real Image Dataset)
+   - Color Space Transformation (BGR to HSV):
+     * Standard RGB mixes color and intensity, making it vulnerable to sunlight/shadow variations.
+     * HSV decouples 'Hue' (color tint: Green = 35-85, Yellow/Brown Lesions = 8-32) from 'Value' (brightness), enabling robust segmentation of diseased tissue.
+   - Feature Extraction from Real Images:
+     * Green Leaf Area Ratio: Percentage of healthy chlorophyll tissue.
+     * Lesion Area Ratio: Percentage of diseased necrotic yellow/brown tissue.
+     * Contour Analysis: Counts distinct lesion spot clusters.
+   - Real Dataset Training & Classification:
+     * Trains a Random Forest Classifier on real leaf image distributions.
+     * Classifies leaf into HEALTHY vs. DISEASED (Blight / Spot) with confidence score.
+     * Renders a 3-Panel Visual GUI Dashboard (Input Image | HSV Lesion Mask | AI Diagnosis Overlay).
 
 7. Medical Diagnosis AI
-   - Extremely sensitive domain. Models must output probabilities, not just binary classifications (hence Logistic Regression is preferred for baselines).
-   - Scaling is mandatory for medical data to ensure vital signs/measurements on different scales don't skew the model.
-   - Recall (minimizing false negatives) is usually prioritized over raw accuracy.
+   - Extremely sensitive domain. Models must output calibrated probabilities, not just binary labels.
+   - Feature Scaling (StandardScaler) is mandatory because biomarker scales vary by orders of magnitude.
+   - Recall (minimizing false negatives) is prioritized because missing a malignant case is far worse than a false alarm.
 
 ========================================================================
 KEY LIBRARIES:
-- pandas: Data manipulation.
-- scikit-learn (sklearn): Machine Learning models and preprocessing.
-- cv2 (OpenCV): Computer Vision and image processing.
-- textblob: Ready-to-use Natural Language Processing (NLP).
+- pandas: Tabular data manipulation & summary statistics.
+- scikit-learn (sklearn): Machine Learning models, metrics, and vectorizers.
+- cv2 (OpenCV): Computer Vision, image processing, cascades, and GUI rendering.
+- numpy: Numerical operations and vector manipulation.
 ========================================================================
