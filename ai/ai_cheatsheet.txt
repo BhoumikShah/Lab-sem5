@@ -1,73 +1,151 @@
 ========================================================================
-                      ARTIFICIAL INTELLIGENCE (AI) CHEATSHEET & VIVA GUIDE
+             ARTIFICIAL INTELLIGENCE (AI) LAB CHEATSHEET & CODE GUIDE
 ========================================================================
+
+
+
+------------------------------------------------------------------------
+PART 1: THEORETICAL FOUNDATIONS & VIVA CONCEPTS
+------------------------------------------------------------------------
 
 1. Rule-Based AI Systems
-   - The foundation of early AI (Expert Systems).
-   - Relies on hardcoded IF-THEN-ELSE logic (e.g., if "weather" in input -> return weather response).
-   - Pros: 100% predictable, no training required.
-   - Cons: Cannot learn, scale, or handle unexpected inputs.
+   - Early AI (Expert Systems) based on hardcoded IF-THEN logic.
+   - Deterministic and 100% predictable; cannot generalize to unseen inputs.
 
 2. Data Collection & Preprocessing
-   - Collection: APIs (JSON via urllib/requests), Web Scraping (BeautifulSoup), CSVs (pandas).
-   - Preprocessing:
-     - Imputation: Filling missing data (e.g., SimpleImputer(strategy='mean')).
-     - Encoding: Converting text to numbers (e.g., OneHotEncoder for non-ordinal categories).
-     - Scaling: Normalizing data so algorithms (like Neural Nets/SVMs) train efficiently.
+   - Imputation: Filling missing/NaN values using mean, median, or mode (`SimpleImputer`).
+   - One-Hot Encoding: Converts non-ordinal categorical text into binary dummy vectors (`OneHotEncoder`).
+   - Feature Scaling: Normalizes features to mean=0, std=1 (`StandardScaler`) so gradient descent and distance metrics train stably.
 
 3. Spam Filter (Text Classification)
-   - Text cannot be fed directly to ML. It must be vectorized.
-   - TF-IDF (Term Frequency-Inverse Document Frequency): Downweights common words ("the", "is") and upweights rare, indicative words.
-   - Multinomial Naive Bayes is the standard baseline algorithm for document/text classification.
+   - TF-IDF Vectorizer converts text into numerical token importance weights.
+   - Multinomial Naive Bayes uses Bayes' Theorem with Laplace smoothing ($\alpha=1.0$) as a fast document classification baseline.
 
 4. Face & Eye Feature Detection (Computer Vision)
-   - Detection vs Recognition: 
-     - Detection: "Is there a face/eye?" (OpenCV Haar Cascades).
-     - Recognition: "Whose identity is this?" (FaceNet, dlib embeddings).
-   - Integral Images: Computes rectangular pixel sums in O(1) constant time regardless of window size.
-   - AdaBoost Cascading: Chains hundreds of weak classifiers into stages. Non-face background windows are discarded in early stages to ensure real-time video performance.
-   - Hyperparameters:
-     * scaleFactor (e.g., 1.1): Multi-scale pyramid reduction step (downscales image by 10% each level).
-     * minNeighbors (e.g., 5 for face, 6 for eyes): Number of overlapping candidate boxes required to accept a detection.
-   - ROI (Region of Interest): Slicing face coordinates before detecting eyes (restricted to upper 60%) reduces search space from O(W*H) to O(w*h) and avoids false positives.
-   - Histogram Equalization (cv2.equalizeHist): Flattens pixel intensity distribution to handle shadow/lighting variations.
+   - Detection vs. Recognition: Detection answers "Where is a face?", Recognition answers "Whose face is it?".
+   - Haar-like Features: Rectangular filters measuring pixel intensity differences (edge, line, 4-rectangle).
+   - Integral Images: Computes rectangular pixel sums in O(1) constant time regardless of window size using 4 corner lookups.
+   - AdaBoost Cascade: Chains weak classifiers in stages. Non-face background regions are rejected in early stages to achieve real-time 30+ FPS speed.
+   - ROI (Region of Interest): Slicing the upper 60% of the face bounding box for eye detection cuts search space from O(W*H) to O(w*h) and avoids false positives on mouths/nostrils.
+   - Histogram Equalization (`cv2.equalizeHist`): Normalizes brightness and stretches contrast across 0-255.
 
-5. Sentiment Analysis & NLP Opinion Mining
-   - Text Vectorization & N-Grams:
-     * TF-IDF = TF(t, d) * log((1 + N) / (1 + DF(t))) + 1
-     * Uni-grams + Bi-grams: Captures negation (e.g., "not good" vs "good") which solves sentiment polarity inversion.
-   - Multi-Model Comparison:
-     * Logistic Regression: Maps linear weights to probabilities via Sigmoid function sigma(z) = 1 / (1 + e^-z). Regularization (C parameter) controls overfitting.
-     * Multinomial Naive Bayes: Probabilistic text classification assuming conditional word independence. Uses Laplace smoothing (alpha=1.0) to prevent zero probabilities.
-     * Linear SVM (SGD): Finds the maximum-margin hyperplane separating classes.
-   - Explainable AI (XAI): Model weights/coefficients indicate which specific words pushed a prediction towards positive or negative.
-   - Metrics:
-     * Precision = TP / (TP + FP) (How many predicted positives were actually positive?)
-     * Recall = TP / (TP + FN) (How many actual positives were caught?)
+5. Sentiment Analysis & Opinion Mining
+   - TF-IDF Formula: $\text{TF}(t, d) \times \log\left(\frac{1 + N}{1 + \text{DF}(t)}\right) + 1$.
+   - N-Grams: Unigrams + Bigrams (`ngram_range=(1, 2)`) preserve negation phrases like "not good" to prevent polarity inversion.
+   - Multi-Model Benchmarking:
+     * Logistic Regression: Maps log-odds to probabilities $[0, 1]$ via the Sigmoid function $\sigma(z) = \frac{1}{1 + e^{-z}}$.
+     * Multinomial Naive Bayes: Fast probabilistic classifier based on word frequencies.
+     * Linear SVM: Finds the maximum-margin separating hyperplane in high-dimensional sparse TF-IDF space.
+   - Explainable AI (XAI): Model weights ($w$) indicate exact keyword influence (e.g. $+3.18$ for "great", $-4.42$ for "bad").
+   - Evaluation Metrics:
+     * Precision = TP / (TP + FP) (Accuracy of positive calls)
+     * Recall = TP / (TP + FN) (Coverage of actual positives)
      * F1-Score = 2 * (Precision * Recall) / (Precision + Recall)
 
-6. Agricultural AI: Plant Leaf Disease Detection & Classification (Real Image Dataset)
-   - Color Space Transformation (BGR to HSV):
-     * Standard RGB mixes color and intensity, making it vulnerable to sunlight/shadow variations.
-     * HSV decouples 'Hue' (color tint: Green = 35-85, Yellow/Brown Lesions = 8-32) from 'Value' (brightness), enabling robust segmentation of diseased tissue.
-   - Feature Extraction from Real Images:
-     * Green Leaf Area Ratio: Percentage of healthy chlorophyll tissue.
-     * Lesion Area Ratio: Percentage of diseased necrotic yellow/brown tissue.
-     * Contour Analysis: Counts distinct lesion spot clusters.
-   - Real Dataset Training & Classification:
-     * Trains a Random Forest Classifier on real leaf image distributions.
-     * Classifies leaf into HEALTHY vs. DISEASED (Blight / Spot) with confidence score.
-     * Renders a 3-Panel Visual GUI Dashboard (Input Image | HSV Lesion Mask | AI Diagnosis Overlay).
+6. Agricultural AI: Plant Leaf Disease Diagnosis (Real Image Dataset)
+   - BGR to HSV Color Space: Decouples Hue (color wavelength) from Value (illumination/shadows).
+     * Healthy Chlorophyll Green: $H \in [35, 85]$
+     * Necrotic Disease Lesions (Blight/Spots): $H \in [8, 32]$
+   - 5D Feature Vector: [Green Ratio, Lesion Ratio, Mean Hue, Mean Saturation, Spot Count].
+   - Contours (`cv2.findContours`): Traces continuous perimeter boundaries of binary lesion masks to count distinct spot clusters.
+   - Random Forest: Ensemble of 50 decorrelated decision trees using Bootstrap Aggregation (Bagging) to minimize variance.
+   - 3-Panel Visual GUI Dashboard: Displays [1] Input Image -> [2] HSV Lesion Mask -> [3] AI Diagnosis Overlay with red contours.
 
 7. Medical Diagnosis AI
-   - Extremely sensitive domain. Models must output calibrated probabilities, not just binary labels.
-   - Feature Scaling (StandardScaler) is mandatory because biomarker scales vary by orders of magnitude.
-   - Recall (minimizing false negatives) is prioritized because missing a malignant case is far worse than a false alarm.
+   - Binary classification (Malignant vs. Benign) on Wisconsin Breast Cancer dataset.
+   - StandardScaler is mandatory because biomarker measurements span different physical units.
+   - Recall is prioritized over raw accuracy to minimize deadly false negatives.
 
-========================================================================
-KEY LIBRARIES:
-- pandas: Tabular data manipulation & summary statistics.
-- scikit-learn (sklearn): Machine Learning models, metrics, and vectorizers.
-- cv2 (OpenCV): Computer Vision, image processing, cascades, and GUI rendering.
-- numpy: Numerical operations and vector manipulation.
+
+------------------------------------------------------------------------
+PART 2: CODE WALKTHROUGH BY EXPERIMENT
+------------------------------------------------------------------------
+
+=== EXPERIMENT 01: RULE-BASED AI (01_rule_based_ai.py) ===
+* `evaluate_profile(gre, score_eng, cgpa)`: Compares inputs against thresholds (GRE > 320, TOEFL > 90, CGPA > 8.0) using nested IF conditions.
+* `graduate_admissions_bot()`: Interactive CLI loop that receives user commands ('evaluate' / 'quit') and calls the rule engine.
+
+=== EXPERIMENT 02: PREPROCESSING PIPELINE (02_data_collection_preprocessing.py) ===
+* `SimpleImputer(strategy='mean')`: Replaces NaN values in 'Age' and 'Salary' with column mean.
+* `OneHotEncoder(sparse_output=False)`: Converts categorical 'City' ('New York', 'Paris', 'London') into 3 binary columns.
+* `StandardScaler()`: Standardizes numerical features using $z = \frac{x - \mu}{\sigma}$.
+
+=== EXPERIMENT 03: SPAM FILTER (03_spam_filter.py) ===
+* `pd.read_csv('sms.tsv', sep='\t')`: Ingests labeled SMS corpus ('ham' vs 'spam').
+* `TfidfVectorizer(stop_words='english')`: Transforms raw text into a sparse TF-IDF token matrix.
+* `train_test_split(X, y, test_size=0.2)`: Reserves 20% unseen data for testing.
+* `MultinomialNB().fit(X_train, y_train)`: Trains the Naive Bayes classifier.
+* `predict_spam(text)`: Vectorizes user input and outputs prediction.
+
+=== EXPERIMENT 04: FACE & EYE DETECTION (04_face_recognition.py) ===
+* `cv2.CascadeClassifier(path)`: Loads Haar Cascade XML files for faces and eyes.
+* `preprocess_frame(img)`:
+  - `cv2.cvtColor(..., cv2.COLOR_BGR2GRAY)`: Converts 3-channel RGB to 1-channel grayscale.
+  - `cv2.equalizeHist(gray)`: Stretches contrast histogram across 0-255.
+* `process_face_detection(frame)`:
+  - `face_cascade.detectMultiScale(equalized, scaleFactor=1.1, minNeighbors=5, minSize=(40, 40))`:
+    Multi-scale pyramid scan returning face bounding boxes `(fx, fy, fw, fh)`.
+  - `upper_face_roi = equalized[fy:fy + int(fh * 0.6), fx:fx + fw]`: Slices upper 60% of face.
+  - `eye_cascade.detectMultiScale(upper_face_roi, ...)`: Finds eyes within the sliced ROI.
+  - `cv2.rectangle(...)` & `cv2.circle(...)`: Draws green face box and blue eye markers.
+  - `cv2.putText(...)`: Overlays HUD badge `Face #1 | Eyes: 2`.
+* `run_image_mode(path)`: Processes image, saves `output_detected_face.png`, and opens `cv2.imshow()`.
+* `run_webcam_mode()`: Captures camera feed (`cv2.VideoCapture(0)`), computes live FPS, and displays video until 'q' is pressed.
+
+=== EXPERIMENT 05: NLP SENTIMENT ANALYSIS (05_sentiment_analysis.py) ===
+* `load_dataset()`: Attempts loading 50k IMDB dataset via KaggleHub, with built-in curated corpus fallback.
+* `clean_text(text)`: Regex stripping of HTML tags `<[^>]*>`, URLs `http\S+`, and non-alphabetic symbols.
+* `train_and_benchmark(df)`:
+  - `train_test_split(..., test_size=0.20, stratify=labels)`: Stratified 80/20 train-test split.
+  - `TfidfVectorizer(ngram_range=(1, 2), max_features=3000, sublinear_tf=True)`: Computes unigram + bigram TF-IDF matrix.
+  - Trains & benchmarks 3 models: `LogisticRegression`, `MultinomialNB`, and `SGDClassifier (Linear SVM)`.
+  - Computes `confusion_matrix(y_test, preds)` -> TN, FP, FN, TP.
+  - `primary.coef_[0]`: Extracts positive (e.g. great, loved) and negative (e.g. bad, worst) word weights.
+* `predict_sentiment(text, model, vectorizer)`: Transforms input sentence, predicts probability via `predict_proba()`, and prints confidence gauge.
+
+=== EXPERIMENT 06: PLANT LEAF HEALTH DIAGNOSIS (06_agriculture_ai.py) ===
+* `load_dataset()`: Ingests real PlantVillage leaf images from `dataset_leaves/healthy/` and `dataset_leaves/diseased/`.
+* `extract_leaf_features(img)`:
+  - `hsv = cv2.cvtColor(..., cv2.COLOR_BGR2HSV)`: Converts image to HSV color space.
+  - `leaf_mask = cv2.inRange(hsv, [5, 30, 20], [120, 255, 255])`: Isolates entire leaf from background.
+  - `green_mask = cv2.inRange(hsv, [35, 40, 40], [85, 255, 255])`: Measures healthy green tissue ($H \in [35, 85]$).
+  - `disease_mask = cv2.inRange(hsv, [8, 50, 40], [32, 255, 255])`: Measures yellow/brown lesion tissue ($H \in [8, 32]$).
+  - `contours, _ = cv2.findContours(disease_mask, ...)`: Traces lesion boundaries and counts clusters with area > 15px.
+  - Returns 5D vector: `[green_ratio, disease_ratio, mean_hue, mean_sat, spot_count]`.
+* `train_test_split(..., test_size=0.20)`: Splits real dataset into 40 training and 10 holdout testing images.
+* `RandomForestClassifier(n_estimators=50).fit(X_train, y_train)`: Trains 50 decision trees using bagging.
+* `build_dashboard(original_img, disease_mask, label, ...)`:
+  - Stitches 3 panels horizontally: [1] Original Leaf, [2] Amber Lesion Mask, [3] AI Overlay with red boundary contours (`cv2.drawContours`).
+* Displays the interactive GUI window via `cv2.imshow()` and saves `output_leaf_diagnosis.png`.
+
+=== EXPERIMENT 07: MEDICAL DIAGNOSIS AI (07_medical_diagnosis_ai.py) ===
+* `load_breast_cancer()`: Loads 30 cell nucleus biomarker features from Scikit-Learn.
+* `StandardScaler().fit_transform(X_train)`: Standardizes clinical measurements.
+* `LogisticRegression().fit(X_train_scaled, y_train)`: Trains probabilistic classifier.
+* `predict_proba(sample_patient)`: Computes calibrated probability of malignancy vs. benign.
+
+
+------------------------------------------------------------------------
+PART 3: COMMON PROFESSOR VIVA QUESTIONS
+------------------------------------------------------------------------
+Q1: Why use Integral Images in Haar Cascades?
+A1: It computes the sum of pixels in any rectangle in O(1) constant time using 4 array corner lookups, enabling real-time detection.
+
+Q2: Why slice the face ROI in Experiment 04?
+A2: It reduces search complexity from O(W*H) to O(w*h) and prevents false eye detections on mouths or nostrils.
+
+Q3: Why use Bigrams in TF-IDF (Experiment 05)?
+A3: Unigrams treat 'not' and 'good' separately, misinterpreting 'not good' as positive. Bigrams preserve negation context.
+
+Q4: Why compare Naive Bayes, Logistic Regression, and SVM in Experiment 05?
+A4: To benchmark generative probabilistic (NB), discriminative probabilistic (LR), and geometric margin maximization (SVM) paradigms on high-dimensional text.
+
+Q5: Why use HSV instead of RGB in Experiment 06?
+A5: RGB mixes color with illumination intensity. HSV decouples Hue (pure color) from Value (brightness), making lesion segmentation illumination-invariant.
+
+Q6: What is a contour in OpenCV?
+A6: A continuous boundary curve joining points of equal intensity/color on a binary mask, used to outline and count distinct disease spots.
+
+Q7: What is the purpose of Train-Test Split across all experiments?
+A7: To evaluate model generalization on unseen data and prevent overfitting/memorization.
 ========================================================================
